@@ -61,6 +61,31 @@ summary(patients_noses)
 library(GGally)
 patients_noses %>%
   select(-subject_id, -mri_id) %>%
-  ggpairs()
+  ggpairs(aes(colour = cdr))
 
 patients_noses %>% group_by(group, m_f) %>% count()
+
+# PCA
+pca <- patients_noses %>%
+  select(age, educ, mmse, e_tiv, n_wbv) %>%
+  prcomp(scale. = TRUE)
+
+# Plot PCA
+pca_labelled <- data.frame(pca$x, cdr = patients_noses$cdr)
+
+ggplot(pca_labelled, aes(x = PC1, y = PC2, colour = cdr)) +
+  geom_point(size = 3)
+
+# LDA
+
+# build the model
+lda <- patients_noses %>%
+  select(age, educ, mmse, e_tiv, n_wbv) %>%
+  MASS::lda(grouping = patients_noses$cdr)
+
+# predict from the model
+plda <- patients_noses %>%
+  select(age, educ, mmse, e_tiv, n_wbv) %>%
+  predict(object = lda)
+
+
