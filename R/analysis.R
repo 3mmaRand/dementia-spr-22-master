@@ -96,7 +96,7 @@ lda <- patients_noses %>%
   MASS::lda(grouping = patients_noses$cdr)
 lda$scaling
 
-y# To determine how well the classes were predicted the scores on LD1 and
+# To determine how well the classes were predicted the scores on LD1 and
 # LD2 and the classes need to be predicted:
 
 # predict from the model
@@ -111,7 +111,7 @@ df %>% ggplot(aes(x = LD1, y = LD2, colour = cdr)) +
 
 table(plda$class, patients_noses$cdr)
 #
-# mat <- confusionMatrix(plda$class, patients_noses$cdr)
+mat <- confusionMatrix(plda$class, patients_noses$cdr)
 # Confusion Matrix and Statistics
 #
 # Reference
@@ -121,8 +121,9 @@ table(plda$class, patients_noses$cdr)
 #           1     0  13  26
 #
 # Overall Statistics
-(198 + 45 + 26) /371
-206/ 371
+
+(198 + 45 + 26) / 371
+206 / 371
 # Accuracy : 0.7251
 # 95% CI : (0.6766, 0.7699)
 # No Information Rate : 0.5553
@@ -184,7 +185,7 @@ lda <- train %>%
   MASS::lda(grouping = train$cdr)
 lda$scaling
 
-y# To determine how well the classes were predicted the scores on LD1 and
+# To determine how well the classes were predicted the scores on LD1 and
 # LD2 and the classes need to be predicted:
 
 # predict from the model
@@ -192,12 +193,12 @@ plda <- test %>%
   select(age, educ, mmse, e_tiv, n_wbv) %>%
   predict(object = lda)
 
-df <- data.frame(plda$x, cdr = patients_noses$cdr)
+df <- data.frame(plda$x, cdr = test$cdr)
 df %>% ggplot(aes(x = LD1, y = LD2, colour = cdr)) +
   geom_point()
 # How many predicted classes are the same as the actual classes:
 
-table(plda$class, patients_noses$cdr)
+table(plda$class, test$cdr)
 #
 confusionMatrix(plda$class, test$cdr)
 
